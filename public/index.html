@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; base-uri 'none'; form-action 'none'">
+  <meta name="referrer" content="no-referrer">
+  <meta name="theme-color" content="#f8faf8">
+  <title>SchemaCraft</title>
+  <link rel="icon" href="./icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./style.css">
+  <script type="module" src="./app.js"></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="brand">
+      <img src="./icon.svg" width="36" height="36" alt="">
+      <div><h1>SchemaCraft</h1><p>Database designer</p></div>
+    </div>
+    <div class="toolbar">
+      <span id="save-status" class="save-status" role="status"></span>
+      <button id="validate" class="button secondary" type="button">Validate</button>
+      <button id="export" class="button primary" type="button">Export</button>
+    </div>
+  </header>
+
+  <main class="workspace">
+    <section class="canvas-panel" aria-label="Schema diagram">
+      <div class="panel-header">
+        <div><h2>Diagram</h2><p id="diagram-summary">0 tables · 0 relationships</p></div>
+        <div class="toolbar">
+          <button id="add-link" class="button secondary" type="button" disabled>Relationship</button>
+          <button id="add-table" class="button primary" type="button">Add table</button>
+        </div>
+      </div>
+      <div id="canvas" class="canvas" tabindex="0" aria-label="Scrollable diagram canvas">
+        <div id="board" class="board" hidden>
+          <svg id="edges" class="edges" aria-hidden="true"></svg>
+          <div id="nodes" class="nodes"></div>
+        </div>
+        <div id="empty" class="empty">
+          <img src="./icon.svg" width="52" height="52" alt="">
+          <h3>Start with a table</h3>
+          <p>Add a table and its columns, then link a foreign key to a primary or unique column.</p>
+          <div class="toolbar">
+            <button id="empty-add" class="button primary" type="button">Add table</button>
+            <button id="sample" class="button secondary" type="button">Load sample</button>
+          </div>
+        </div>
+      </div>
+      <div class="canvas-footer">
+        <span>PostgreSQL</span>
+        <span id="graph-help">Drag table headers to arrange the diagram.</span>
+      </div>
+    </section>
+
+    <aside class="inspector" aria-labelledby="inspector-title">
+      <div class="panel-header"><div><h2 id="inspector-title">Table details</h2><p>Edit columns and relationships</p></div></div>
+      <div id="inspector-body" class="inspector-body"></div>
+    </aside>
+  </main>
+  <p id="notification" class="notification" role="status"></p>
+
+  <dialog id="relationship-dialog" aria-labelledby="relationship-title">
+    <form id="relationship-form" class="dialog-content">
+      <div class="dialog-heading"><h2 id="relationship-title">Add relationship</h2><button class="icon-button close" type="button" aria-label="Close">×</button></div>
+      <p>Choose a foreign-key column, then pick a primary or unique column of the same type.</p>
+      <div class="form-grid">
+        <label>Source table<select id="source-table" required></select></label>
+        <label>Foreign-key column<select id="source-column" required></select></label>
+        <label>Target table<select id="target-table" required></select></label>
+        <label>Referenced column<select id="target-column" required></select></label>
+      </div>
+      <label>On delete<select id="delete-action"></select></label>
+      <p id="relationship-error" class="error" role="alert"></p>
+      <div class="dialog-actions">
+        <button id="remove-link" class="button danger" type="button" hidden>Remove</button>
+        <button id="save-link" class="button primary" type="submit">Save relationship</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="validation-dialog" aria-labelledby="validation-title">
+    <div class="dialog-content">
+      <div class="dialog-heading"><h2 id="validation-title">Schema validation</h2><button class="icon-button close" type="button" aria-label="Close">×</button></div>
+      <p id="validation-result"></p>
+      <ul id="issues" class="issues"></ul>
+      <div class="dialog-actions"><button class="button secondary close" type="button">Done</button></div>
+    </div>
+  </dialog>
+
+  <dialog id="export-dialog" class="export-dialog" aria-labelledby="export-title">
+    <div class="dialog-content">
+      <div class="dialog-heading"><h2 id="export-title">Export schema</h2><button class="icon-button close" type="button" aria-label="Close">×</button></div>
+      <label for="format">Format</label>
+      <select id="format"><option value="sql">PostgreSQL migration</option><option value="prisma">Prisma schema</option></select>
+      <p id="format-help"></p>
+      <textarea id="preview" rows="12" readonly aria-label="Generated code" spellcheck="false"></textarea>
+      <p id="export-status" class="export-status" role="status"></p>
+      <div class="dialog-actions">
+        <button id="copy" class="button secondary" type="button">Copy</button>
+        <button id="download" class="button primary" type="button">Download</button>
+      </div>
+    </div>
+  </dialog>
+</body>
+</html>
