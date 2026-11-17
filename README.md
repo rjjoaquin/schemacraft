@@ -2,6 +2,8 @@
 
 Design a PostgreSQL schema on a drag-and-drop diagram. Add tables and columns, connect foreign keys, then validate and export `migration.sql` or `schema.prisma`.
 
+[See a live example](http://schemacraft.rjwebdeveloper.com/)
+
 ## Run locally
 
 With Node.js 22 or later, run `npm run dev` and open [localhost:4173](http://localhost:4173). Run `npm test` for the offline checks. No dependencies to install.
